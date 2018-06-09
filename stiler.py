@@ -37,6 +37,7 @@ WinTitle = 21
 WinBorder = 1
 MwFactor = 0.65
 TempFile = /tmp/tile_winlist
+Refocus = 1
 """)
         cfg.close()
 
@@ -69,6 +70,8 @@ def initialize():
 def get_active_window():
     return str(hex(int(commands.getoutput("xdotool getactivewindow 2>/dev/null").split()[0])))
     
+def get_mouse_window():
+    return str(hex(int(commands.getoutput("xdotool getmouselocation 2>/dev/null").split()[3].split(':')[1])))
 
 def store(object,file):
     with open(file, 'w') as f:
@@ -99,6 +102,7 @@ WinTitle = Config.getint("default","WinTitle")
 WinBorder = Config.getint("default","WinBorder")
 MwFactor = Config.getfloat("default","MwFactor")
 TempFile = Config.get("default","TempFile")
+Refocus = Config.getint("default","Refocus")
 (Desktop,OrigXstr,OrigYstr,MaxWidthStr,MaxHeightStr,WinList) = initialize()
 MaxWidth = int(MaxWidthStr) - LeftPadding - RightPadding
 MaxHeight = int(MaxHeightStr) - TopPadding - BottomPadding
@@ -178,10 +182,13 @@ def move_window(windowid,PosX,PosY,Width,Height):
 def raise_window(windowid):
     if windowid == ":ACTIVE:":
         command = "wmctrl -a :ACTIVE: "
+    elif windowid == '0x0':
+        command = None
     else:
-        command - "wmctrl -i -a " + windowid
+        command = "wmctrl -i -a " + windowid
     
-    os.system(command)
+    if command:
+        os.system(command)
 
 
 def left():
@@ -233,6 +240,8 @@ def arrange(layout,windows):
         move_window(win,lay[0],lay[1],lay[2],lay[3])
     WinList[Desktop]=windows
     store(WinList,TempFile)
+    if Refocus:
+        raise_window(get_mouse_window())
 
 
 def simple():
@@ -306,4 +315,3 @@ elif sys.argv[1] == "maximize":
     maximize()
 elif sys.argv[1] == "max_all":
     max_all()
-
