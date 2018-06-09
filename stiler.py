@@ -2,6 +2,7 @@
 
 ############################################################################
 # Copyright (c) 2009   unohu <unohu0@gmail.com>                            #
+# Copyright (c) 2012   Athmane <athmane@fedoraproject.org>                 #
 #                                                                          #
 # Permission to use, copy, modify, and/or distribute this software for any #
 # purpose with or without fee is hereby granted, provided that the above   #
@@ -63,6 +64,11 @@ def initialize():
 
     for desk in desk_list:
         win_list[desk] = map(lambda y: hex(int(y.split()[0],16)) , filter(lambda x: x.split()[1] == desk, win_output ))
+
+    # Unmax all wins in the current desktop
+    for win_id in win_list[desktop]:
+        os.system("wmctrl -i -r %s -b remove,maximized_vert" % win_id)
+        os.system("wmctrl -i -r %s -b remove,maximized_horz" % win_id)
 
     return (desktop,orig_x,orig_y,width,height,win_list)
 
