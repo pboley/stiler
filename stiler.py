@@ -1,7 +1,8 @@
-#!/usr/bin/python
+#!/usr/bin/python2
 
 ############################################################################
 # Copyright (c) 2009   unohu <unohu0@gmail.com>                            #
+# Copyright (c) 2018   Paul Boley <pboley@gmail.com>
 #                                                                          #
 # Permission to use, copy, modify, and/or distribute this software for any #
 # purpose with or without fee is hereby granted, provided that the above   #
